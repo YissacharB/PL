@@ -12,89 +12,70 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using PL.View;
-
-  
+using PL.ViewModels;
 
 namespace PL
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public sealed partial class MainWindow : Window
     {
+        public FallsVM CurrentVM { get; set; }
+        private static MainWindow instance = null;
+        public static MainWindow Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new MainWindow();
+                }
+                return instance;
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
-        }
-      
-        //???
-        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
-        {
-            ButtonCloseMenu.Visibility = Visibility.Visible;
-            ButtonOpenMenu.Visibility = Visibility.Collapsed;
-        }
-        //???
-        private void ButtonCloseMenu_Click(object sender, RoutedEventArgs e)
-        {
-            ButtonCloseMenu.Visibility = Visibility.Collapsed;
-            ButtonOpenMenu.Visibility = Visibility.Visible;
+            instance = this;
+            CurrentVM = new FallsVM();
+            this.DataContext = CurrentVM;
+            fallImageElement.Load();
+            fallImageElement.UpdateAll("0", secondMapElement);
+            MainMap.TodayOnly();
         }
 
-
-        private void Report_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ReportWindows report = new ReportWindows();
-            report.Show();
+          
         }
 
-/*
-        private void VerifiedHits_Click(object sender, RoutedEventArgs e)
+        private void IconButton_Click(object sender, RoutedEventArgs e)
         {
-            New_Hit hit = new New_Hit();
-            hit.Show();
+            MainMap.TodayOnly();
         }
 
-        private void DataAnalysis_Click(object sender, RoutedEventArgs e)
+        private void GraphUC_Loaded(object sender, RoutedEventArgs e)
         {
-            Data_Analysis data_Analysis = new Data_Analysis();
-            data_Analysis.Show();
+
         }
 
-        private void BrowseReports_Click(object sender, RoutedEventArgs e)
+        private void TabItem_GotFocus(object sender, RoutedEventArgs e)
         {
-            Browse_Report browse_Report = new Browse_Report();
-            browse_Report.Show();
+            fallImageElement.Load();
+            fallImageElement.UpdateAll("0", secondMapElement);
         }
 
-        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Ellipse_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            UserControl usc = null;
-
-            switch (((ListViewItem)((ListView)sender).SelectedItem).Name)
-            {
-                case "ItemHome":
-                    usc = new UserControlHome();
-                    GridMain.Children.Add(usc);
-                    break;
-                case "ItemCreate":
-                    usc = new UserControlCreate();
-                    GridMain.Children.Add(usc);
-                    break;
-                default:
-                    break;
-            }
+            MainMap.TodayOnly();
         }
 
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        private void TabItem_GotFocus_1(object sender, RoutedEventArgs e)
         {
-            Close();
+            PieChartElement.Load();
+            StatisticsElement.Load();
+            GraphElement.Load();
         }
-
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
-        */
     }
 }
